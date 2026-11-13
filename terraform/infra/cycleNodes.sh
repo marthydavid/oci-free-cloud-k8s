@@ -8,7 +8,7 @@ function print_usage() {
     echo "Usage: $0 <node-ip-address> (optional)"
     echo ""
     echo "This script will sequentially delete each node in the node-pool, scaling up before each deletion."
-    echo "It waits for Longhorn to report all volumes as healthy after each deletion."
+    echo "It waits for all nodes to be Ready after each deletion."
     echo ""
     echo "Environment variables:"
     echo "  OCI_CLI_PROFILE - (optional) OCI CLI profile to use. If not set, default profile is used."
@@ -56,13 +56,6 @@ function check_dependencies() {
     echo "All checks passed."
 }
 
-function ensure_longhorn_namespace() {
-    if ! kubectl get namespace longhorn >/dev/null 2>&1; then
-        echo "Longhorn namespace 'longhorn' does not exist. Please install Longhorn before running this script."
-        exit 1
-    fi
-}
-
 function upgradeNodes() {
   waitForState="--wait-for-state SUCCEEDED --wait-for-state FAILED --force"
   nodesFilter="[.data.nodes[] | select( .\"lifecycle-state\" == \"ACTIVE\")][].id"
@@ -87,22 +80,13 @@ function upgradeNodes() {
     echo "Deleting node ${nodeToBeDeleted}"
     oci ce node-pool delete-node --node-pool-id ${nodePoolId} --node-id ${nodeToBeDeleted} ${waitForState}
 
-    echo "Waiting for longhorn to sync volumes on new node"
-    longhornNotHealthy=1
-
-    while [ ${longhornNotHealthy} -gt 0 ]
-    do
-      longhornNotHealthy=$(kubectl get volume -n longhorn -o=jsonpath="{range .items[*]}{.status.robustness} {.status.state}{\"\n\"}" | grep attached | awk {'print $1'} | grep -v healthy | wc -l)
-      echo "${longhornNotHealthy} not healthy volumes"
-      sleep 10
-    done
-
-    echo "All volumes healthy now"
+    echo "Waiting for all nodes to be Ready"
+    sleep 60
+    kubectl wait --for=condition=Ready nodes --all --timeout=15m
   done
 }
 
 print_usage "$@"
 check_dependencies
-ensure_longhorn_namespace
 confirm_proceed
 upgradeNodes

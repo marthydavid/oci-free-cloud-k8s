@@ -32,8 +32,6 @@ spec:
       - secretRef:
           name: dex-grafana-client
       - secretRef:
-          name: dex-s3-proxy-client
-      - secretRef:
           name: dex-envoy-client
     replicaCount: 2
     https:
@@ -66,13 +64,7 @@ spec:
           IDEnv: envoy.client-id
           secretEnv: envoy.client-secret
           redirectURIs:
-            - https://storage.oci.marthy.xyz/oauth2/callback
             - https://prometheus.oci.marthy.xyz/oauth2/callback
-        - name: S3Proxy
-          IDEnv: s3proxy.client-id
-          secretEnv: s3proxy.client-secret
-          redirectURIs:
-            - https://s3.oci.marthy.xyz/auth/dex/callback
         - name: Grafana
           IDEnv: grafana.client-id
           secretEnv: grafana.client-secret

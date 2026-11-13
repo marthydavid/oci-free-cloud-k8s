@@ -39,16 +39,9 @@ spec:
         podMonitorSelector:
           matchLabels:
             app.kubernetes.io/component: monitoring
-        retention: ""
-        retentionSize: 14GB
-        storageSpec:
-          volumeClaimTemplate:
-            spec:
-              storageClassName: longhorn
-              accessModes: ["ReadWriteOnce"]
-              resources:
-                requests:
-                  storage: 15Gi
+        # no persistent volume (no longhorn): metrics live in emptyDir
+        retention: 3d
+        retentionSize: 4GB
     defaultRules:
       create: true
       rules:

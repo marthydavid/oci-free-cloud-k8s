@@ -28,3 +28,25 @@ variable "kubernetes_worker_nodes" {
 
   default = 2
 }
+
+# Sized for the halved free tier: 2 oCPUs / 12GB in total (2 nodes x 1 oCPU / 6GB)
+variable "kubernetes_worker_ocpus" {
+  description = "oCPUs per worker node"
+  type        = number
+
+  default = 1
+}
+
+variable "kubernetes_worker_memory_gbs" {
+  description = "Memory (GB) per worker node"
+  type        = number
+
+  default = 6
+}
+
+variable "kubernetes_worker_boot_volume_gbs" {
+  description = "Boot volume size (GB) per worker node (OCI minimum is 50)"
+  type        = number
+
+  default = 50
+}

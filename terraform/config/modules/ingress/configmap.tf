@@ -1,7 +1,6 @@
 locals {
   namespaces = [
-    "envoy-gateway",
-    "teleport"
+    "envoy-gateway"
   ]
 }
 resource "kubectl_manifest" "lb-sg-ns" {
