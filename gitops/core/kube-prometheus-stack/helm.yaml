@@ -39,9 +39,17 @@ spec:
         podMonitorSelector:
           matchLabels:
             app.kubernetes.io/component: monitoring
-        # no persistent volume (no longhorn): metrics live in emptyDir
-        retention: 3d
-        retentionSize: 4GB
+        retention: ""
+        retentionSize: 40GB
+        storageSpec:
+          volumeClaimTemplate:
+            spec:
+              # OKE's built-in block volume class; 50Gi is the OCI minimum
+              storageClassName: oci-bv
+              accessModes: ["ReadWriteOnce"]
+              resources:
+                requests:
+                  storage: 50Gi
     defaultRules:
       create: true
       rules:
