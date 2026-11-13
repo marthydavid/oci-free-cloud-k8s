@@ -7,7 +7,7 @@ spec:
     - name: contour-gateway
       namespace: contour
   hostnames:
-    - "img.marthy.xyz"
+    - "img.oci.marthy.xyz"
   rules:
     - matches:
         - path:

@@ -41,7 +41,7 @@ spec:
     ingress:
       enabled: false
     config:
-      issuer: https://login.marthy.xyz/dex/
+      issuer: https://login.oci.marthy.xyz/dex/
       # The storage configuration determines where dex stores its state. Supported
       # options include SQL flavors and Kubernetes third party resources.
       #
@@ -66,18 +66,18 @@ spec:
           IDEnv: envoy.client-id
           secretEnv: envoy.client-secret
           redirectURIs:
-            - https://storage.marthy.xyz/oauth2/callback
-            - https://prometheus.marthy.xyz/oauth2/callback
+            - https://storage.oci.marthy.xyz/oauth2/callback
+            - https://prometheus.oci.marthy.xyz/oauth2/callback
         - name: S3Proxy
           IDEnv: s3proxy.client-id
           secretEnv: s3proxy.client-secret
           redirectURIs:
-            - https://s3.marthy.xyz/auth/dex/callback
+            - https://s3.oci.marthy.xyz/auth/dex/callback
         - name: Grafana
           IDEnv: grafana.client-id
           secretEnv: grafana.client-secret
           redirectURIs:
-            - https://monitoring.marthy.xyz/login/generic_oauth
+            - https://monitoring.oci.marthy.xyz/login/generic_oauth
       connectors:
         - type: microsoft
           id: entra
@@ -86,7 +86,7 @@ spec:
             clientID: $ENTRA_CLIENT_ID
             clientSecret: $ENTRA_CLIENT_SECRET
             tenant: $ENTRA_TENANT_ID
-            redirectURI: https://login.marthy.xyz/dex/callback
+            redirectURI: https://login.oci.marthy.xyz/dex/callback
             # emit group names (not object IDs); needs "GroupMember.Read.All"
             groupNameFormat: name
             # only these Entra groups end up in the token's groups claim

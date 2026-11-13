@@ -49,7 +49,7 @@ spec:
             name: external-dns-config
             key: secretAccessKey
     domainFilters:
-      - marthy.xyz
+      - oci.marthy.xyz
     extraArgs:
       - --aws-zone-type=public
       - --exclude-target-net=10.0.0.0/8

@@ -9,11 +9,11 @@ spec:
       name: prometheus
   oidc:
     provider:
-      issuer: https://login.marthy.xyz/dex/
+      issuer: https://login.oci.marthy.xyz/dex/
     clientID: envoy-gateway
     clientSecret:
       name: dex-envoy-client
-    redirectURL: "https://prometheus.marthy.xyz/oauth2/callback"
+    redirectURL: "https://prometheus.oci.marthy.xyz/oauth2/callback"
     logoutPath: "/logout"
 ---
 apiVersion: gateway.envoyproxy.io/v1alpha1

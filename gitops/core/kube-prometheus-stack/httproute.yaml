@@ -7,7 +7,7 @@ spec:
     - name: envoy
       namespace: envoy-gateway
   hostnames:
-    - "prometheus.marthy.xyz"
+    - "prometheus.oci.marthy.xyz"
   rules:
     - matches:
         - path:
@@ -26,7 +26,7 @@ spec:
     - name: envoy
       namespace: envoy-gateway
   hostnames:
-    - "prometheus-write.marthy.xyz"
+    - "prometheus-write.oci.marthy.xyz"
   rules:
     - matches:
         - path:
