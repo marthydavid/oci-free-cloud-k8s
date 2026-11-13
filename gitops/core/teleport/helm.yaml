@@ -30,17 +30,11 @@ spec:
       valuesKey: values.yaml
   values:
     chartMode: standalone
-    clusterName: teleport.nce.wtf
+    clusterName: teleport.marthy.xyz
     kubeClusterName: oci
     proxyListenerMode: multiplex
-    auth:
-      teleportConfig:
-        auth_service:
-          authentication:
-            type: github
     authentication:
-      type: github
-      localAuth: true
+      type: local
       secondFactor: on
     highAvailability:
       replicaCount: 1
@@ -59,7 +53,7 @@ spec:
         type: LoadBalancer
       annotations:
         service:
-          external-dns.kubernetes.io/hostname: teleport.nce.wtf
+          external-dns.kubernetes.io/hostname: teleport.marthy.xyz
           oci.oraclecloud.com/load-balancer-type: "nlb"
           #          this does not work; the teleport chart doesn't support tpl
           #          oci-network-load-balancer.oraclecloud.com/oci-network-security-groups: "{{ tpl .Values.oci.lbsecuritygroup . }}"

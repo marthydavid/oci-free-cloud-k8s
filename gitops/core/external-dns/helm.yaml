@@ -26,7 +26,7 @@ spec:
   releaseName: external-dns
   values:
     provider:
-      name: cloudflare
+      name: aws
     policy: sync
     sources:
       - service
@@ -36,25 +36,20 @@ spec:
     managedRecordTypes:
       - A
     env:
-      - name: CF_API_TOKEN
+      - name: AWS_DEFAULT_REGION
+        value: us-east-1
+      - name: AWS_ACCESS_KEY_ID
         valueFrom:
           secretKeyRef:
             name: external-dns-config
-            key: apiKey
+            key: accessKeyId
+      - name: AWS_SECRET_ACCESS_KEY
+        valueFrom:
+          secretKeyRef:
+            name: external-dns-config
+            key: secretAccessKey
+    domainFilters:
+      - marthy.xyz
     extraArgs:
+      - --aws-zone-type=public
       - --exclude-target-net=10.0.0.0/8
----
-apiVersion: kustomize.toolkit.fluxcd.io/v1
-kind: Kustomization
-metadata:
-  name: dns-records
-  namespace: flux-system
-spec:
-  interval: 1h
-  path: ./gitops/core/external-dns/dns-records/
-  prune: true
-  dependsOn:
-    - name: external-dns
-  sourceRef:
-    kind: GitRepository
-    name: flux-system
