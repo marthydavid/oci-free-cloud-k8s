@@ -9,7 +9,7 @@ resource "random_password" "webhook_secret" {
 
 resource "vault_kv_secret_v2" "webhook_token" {
   mount = var.vault_mount
-  name  = "github-flux-webhook-token"
+  name  = "oci-k8s/github-flux-webhook-token"
 
   data_json = jsonencode({
     value = random_password.webhook_secret.result
