@@ -7,59 +7,41 @@ metadata:
 YAML
 }
 
-resource "kubectl_manifest" "external_secrets_api_secret" {
+resource "kubectl_manifest" "external_secrets_token" {
   yaml_body = <<YAML
 apiVersion: v1
 kind: Secret
 metadata:
-  name: oracle-vault
+  name: vault-token
   namespace: external-secrets
 type: Opaque
 data:
-  privateKey: ${base64encode(tls_private_key.external_secrets.private_key_pem)}
-  fingerprint: ${base64encode(oci_identity_api_key.external_secrets.fingerprint)}
+  token: ${base64encode(var.vault_token)}
 YAML
+
+  sensitive_fields = ["data"]
+  depends_on       = [kubectl_manifest.external_secrets_namespace]
 }
 
-data "oci_kms_vaults" "external_secrets_vault" {
-  compartment_id = var.compartment_id
-
-  filter {
-    name   = "id"
-    values = [var.vault_id]
-  }
-}
-
-data "oci_kms_keys" "external_secrets_key" {
-  compartment_id      = var.compartment_id
-  management_endpoint = data.oci_kms_vaults.external_secrets_vault.vaults[0].management_endpoint
-}
-
+# HashiCorp Vault KV v2 mounted at "${var.vault_mount}"
 resource "kubectl_manifest" "external_secrets_cluster_store" {
   yaml_body = <<YAML
 apiVersion: external-secrets.io/v1
 kind: ClusterSecretStore
 metadata:
-  name: oracle-vault
+  name: vault
 spec:
   provider:
-    oracle:
-      vault: ${var.vault_id}
-      compartment: ${var.compartment_id}
-      encryptionKey: ${coalesce(var.vault_key_id, data.oci_kms_keys.external_secrets_key.keys[0].id)}
-      region: eu-frankfurt-1
+    vault:
+      server: ${var.vault_address}
+      path: ${var.vault_mount}
+      version: v2
       auth:
-        user: ${oci_identity_user.external_secrets.id}
-        tenancy: ${var.tenancy_id}
-        principalType: UserPrincipal
-        secretRef:
-          privatekey:
-            name: oracle-vault
-            key: privateKey
-            namespace: external-secrets
-          fingerprint:
-            name: oracle-vault
-            key: fingerprint
-            namespace: external-secrets
+        tokenSecretRef:
+          name: vault-token
+          key: token
+          namespace: external-secrets
 YAML
+
+  depends_on = [kubectl_manifest.external_secrets_token]
 }

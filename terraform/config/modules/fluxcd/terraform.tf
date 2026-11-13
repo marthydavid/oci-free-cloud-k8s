@@ -2,6 +2,10 @@ terraform {
 
   required_providers {
 
+    vault = {
+      source = "hashicorp/vault"
+    }
+
     flux = {
       source = "fluxcd/flux"
     }

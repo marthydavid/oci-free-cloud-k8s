@@ -1,20 +1,16 @@
-variable "compartment_id" {
+variable "vault_address" {
   type        = string
-  description = "The compartment to create the resources in"
+  description = "Address of the HashiCorp Vault server, e.g. https://vault.example.com:8200"
 }
 
-variable "vault_id" {
+variable "vault_token" {
   type        = string
-  description = "The OCID of the Vault to store the secrets in"
+  description = "Vault token with read access to the KV mount"
+  sensitive   = true
 }
 
-variable "vault_key_id" {
+variable "vault_mount" {
   type        = string
-  description = "The OCID of the Vault encryption key to use when creating secrets"
-  default     = null
-}
-
-variable "tenancy_id" {
-  type        = string
-  description = "The OCID of the tenancy"
+  description = "Mount path of the KV v2 secrets engine"
+  default     = "secret"
 }

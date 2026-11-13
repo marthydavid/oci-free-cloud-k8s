@@ -58,3 +58,9 @@ variable "flux_registry" {
   type        = string
   default     = "ghcr.io/fluxcd"
 }
+
+variable "vault_mount" {
+  type        = string
+  description = "Mount path of the HashiCorp Vault KV v2 secrets engine"
+  default     = "secret"
+}
